@@ -1,0 +1,35 @@
+package firstjdbcprogram;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class FirstJDBCTest {
+ 
+	
+	// connect with the Database and retrieve the Data from DB 
+	
+			// JDBC URL , USERNAME , PASSWORD of MYSQL DB
+	
+	private static final String URL="jdbc:mysql://127.0.0.1:3306/customerdb";
+	private static final String USERNAME="root123";
+	private static final String PASSSWORD="admin1234";
+	
+	
+	public static void main(String[] args) {
+		System.out.println("Welcome to JDBC course");
+		
+	
+		try(Connection con=	DriverManager.getConnection(URL,USERNAME,PASSSWORD)) {
+			
+			System.out.println("Connected to DB...!");
+			
+		} catch (Exception e) {
+			System.out.println("Failed to connect with the DB : "+e.getMessage() );
+		}
+		
+		
+		
+		
+	}
+
+}

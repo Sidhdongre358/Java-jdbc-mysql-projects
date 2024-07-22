@@ -1,0 +1,53 @@
+package com.main;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class App 
+{
+	private static final String URL="jdbc:mysql://127.0.0.1:3306/mydb";
+	private static final String USERNAME="root";
+	private static final String PASSWORD="admin1234";
+    public static void main( String[] args )
+    {
+        
+    	try {
+    		Connection connection = DriverManager.getConnection(URL,USERNAME,PASSWORD);
+    		System.out.println("Connected to DB....");
+    		
+    		connection.setAutoCommit(false);
+    		
+    		// batch processing with help of Statement
+    	
+    		Statement statement=connection.createStatement();
+    		statement.addBatch("INSERT INTO employees_tablle (name ,job_title,salary)"
+    				+ " VALUES('Parth','Sql Developer',65000.00)");
+    		
+    		statement.addBatch("INSERT INTO employees_tablle (name ,job_title,salary)"
+    				+ " VALUES('Shivam','Frontend develop',55000.00)");
+    		
+    		statement.addBatch("INSERT INTO employees_tablle (name ,job_title,salary)"
+    				+ " VALUES('Shraya','Backend developer',70000.00)");
+    		
+    		statement.addBatch("INSERT INTO employees_tablle (name ,job_title,salary)"
+    	    				+ " VALUES('Sakshi','Tester',65000.00)");
+    		
+    		statement.addBatch("INSERT INTO employees_tablle (name ,job_title,salary)"
+    	    	    				+ " VALUES('Riyansh','Hr manager',45000.00)");
+    		
+    		
+    		int [] rowsAffected =statement.executeBatch();
+    		System.out.println(" Rows affeted result :  "+rowsAffected.toString());
+    		
+    		
+    		
+			
+		} catch (SQLException e) {
+		System.out.println(e.getMessage());
+		}
+    	
+    	
+    }
+}

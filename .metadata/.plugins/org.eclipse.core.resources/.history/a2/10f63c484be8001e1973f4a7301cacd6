@@ -1,0 +1,165 @@
+package com.main;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+import java.sql.Timestamp;
+
+// Hotel booking system
+public class App 
+{
+	
+	private static final String URL="jdbc:mysql://127.0.0.1:3306/hoteldb";
+	private static final String USERNAME="root";
+	private static final String PASSWORD="admin1234";
+	
+	
+    public static void main( String[] args )
+    {
+        System.out.println("Welcome to Hotel....");
+        // Load drivers
+        
+//        try {
+//        	Class.forName("com.mysql.jdbc.Driver");
+//			
+//        	System.out.println("driver loaded....");
+//		} catch (ClassNotFoundException e) {
+//			System.out.println("failed to load the drivers : " +e.getMessage());
+//		}
+    	
+        // Connection to DB.
+        
+        try {
+        	Connection connection=DriverManager.getConnection(URL,USERNAME,PASSWORD);
+        	System.out.println("Connected to DB...");
+        	System.out.println();
+        	
+        	/*
+        	 MENU -
+        	 1. Book a room 			- insert data of customer - save it into db
+        	 2. View the room 			- show details of that customer -> room
+        	 3. Show all the booking	- show all customer data
+        	 4. Update booking details 	- update data 
+        	 5. Delete data				- delete customer data 
+        	 6. Exit 
+        	 */
+        	
+        	// let's show these options to user 
+        	
+        	while(true) {
+            	System.out.println("Please select from below : ");
+            	System.out.println("1. Book a room");
+            	System.out.println("2. View the room");
+            	System.out.println("3. Show all the booking");
+            	System.out.println("4. Update booking details");
+            	System.out.println("5. Delete booking");
+            	System.out.println("6. Exit");
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("ENTER OPTION : ");
+                int option=scanner.nextInt() ;
+                System.out.println("Option selected by user : "+option);
+                System.out.println();
+            	
+                if(option==1) {
+                	bookARoom(connection);
+                }
+        		if(option==6) {
+        			System.out.println("Thank you... program is terminated");
+        			break;
+        		}
+        	}
+        	
+        	
+        	// close the connection here 
+            
+            connection.close();
+            System.out.println("Connection has been closed...");
+	
+		} catch (SQLException e) {
+			System.out.println("failed to connect with DB.. "+e.getMessage());
+		}
+    	
+    }
+    // Method to book a room..
+    private static void bookARoom(Connection connection) {
+    	
+    	// columns - id , name , room_no ,phone, timestamp
+    	String sql ="INSERT INTO booking_table (name,room_no,phone)VALUES(?,?,?)";
+    	
+    	try {
+    		
+    	PreparedStatement preparedStatement=connection.prepareStatement(sql);
+    	
+    	Scanner scanner = new Scanner(System.in);
+    	System.out.print("ENTER NAME : ");
+    	String nameString=scanner.next();
+    	System.out.print("ENTER ROOM NO : ");
+    	int roomNo=scanner.nextInt();
+    	System.out.print("ENTER PHONE NUMBER : ");
+    	String phoneNumber=scanner.next();
+    	if(nameString!=null && phoneNumber!=null&& roomNo!=0) {
+    		preparedStatement.setString(1, nameString);
+        	preparedStatement.setInt(2,roomNo);
+        	preparedStatement.setString(3, phoneNumber);
+        	
+        	
+        	int rowsAffected =preparedStatement.executeUpdate();
+        	if(rowsAffected>0) {
+        		System.out.println("Booked successfully...");
+        		System.out.println();
+        	}else {
+        		System.out.println("Failed to book... please try again...");
+        	}
+    	}else {
+    		System.out.println("please enter details");
+    	}
+    	
+    	preparedStatement.close();
+			
+		} catch (SQLException e) {
+			System.out.println("failed to book a room : "+ e.getMessage());
+		}
+    	
+    	
+    }
+
+     // Method to View one booked room 
+    private static void viewBookedRoom(Connection connection) {
+    	
+    	String sql="SELECT * FROM booking_table WHERE id =? AND name = ?";
+    	
+    	try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			
+			preparedStatement.setInt(1, 1);
+			preparedStatement.setString(2, "Raj");
+			ResultSet resultSet= preparedStatement.executeQuery();
+			
+			System.out.println("+----------+--------------+--------------+-------------+---------------+");
+			System.out.println("|   ID     |      NAME    |    ROOM NO   |    PHONE    |     TIME      |");
+			System.out.println("+----------+--------------+--------------+-------------+---------------+");
+
+			while (resultSet.next()) {
+			int id = resultSet.getInt("id");
+			String nameString = resultSet.getString("name");
+			int roomNo= resultSet.getInt("room_no");
+			String phoneNumber= resultSet.getString("phone");
+			Timestamp timestamp = resultSet.getTimestamp("booking_time");
+			System.out.println("|  "+id+"  |      "+nameString+"    |    "+roomNo+"  |    "+phoneNumber+"    |     "+timestamp+"      |");
+			}
+			resultSet.close();
+			preparedStatement.close();
+			
+			
+		} catch (SQLException e) {
+			System.out.println("failed to get single  data from table " + e.getMessage());
+		}
+    	
+    }
+    
+    
+    
+}

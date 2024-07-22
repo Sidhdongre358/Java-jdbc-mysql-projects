@@ -1,0 +1,16 @@
+package com.main;
+
+
+public class App 
+{
+	private static final String URL="jdbc:mysql://127.0.0.1:3306/mydb";
+	private static final String USERNAME="root";
+	private static final String PASSWORD="admin1234";
+    public static void main( String[] args )
+    {
+        
+    	
+    	
+    	
+    }
+}

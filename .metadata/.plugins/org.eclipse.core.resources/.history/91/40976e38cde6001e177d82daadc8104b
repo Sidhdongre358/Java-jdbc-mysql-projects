@@ -1,0 +1,28 @@
+package com.main;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class App 
+{
+	private static final String URL="jdbc:mysql://127.0.0.1:3306/customerdb";
+	private static final String USERNAME="root";
+	private static final String PASSWORD="admin1234";
+	
+	
+    public static void main( String[] args )
+    {
+        System.out.println( "How to insert the Data the DB" );
+        
+        
+        try (Connection connection = DriverManager.getConnection(URL,USERNAME,PASSWORD)){
+        	
+        	System.out.println("Connected to DB...!");
+			
+		} catch (SQLException e) {
+        	System.out.println("Failed to connect to DB...! message : " + e.getMessage());
+
+		}
+    }
+}

@@ -1,0 +1,24 @@
+package jdbc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class Main {
+
+	public static void main(String[] args) {
+		String urlString ="jdbc:mysql://127.0.0.1:3306/?";
+		String usernameString = "root";
+		String passwordString = "admin1234";
+		// TODO Auto-generated method stub
+     try {
+		Connection connection = DriverManager.getConnection(urlString,usernameString,passwordString);
+	System.out.println("connected to DB");
+     
+     } catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	}
+
+}

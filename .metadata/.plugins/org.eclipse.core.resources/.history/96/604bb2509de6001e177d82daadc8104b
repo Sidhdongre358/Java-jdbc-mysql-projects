@@ -1,0 +1,67 @@
+package firstjdbcprogram;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class FirstJDBCTest {
+ 
+	
+	// connect with the Database and retrieve the Data from DB 
+	
+			// JDBC URL , USERNAME , PASSWORD of MYSQL DB
+	
+	private static final String URL="jdbc:mysql://127.0.0.1:3306/customerdb";
+	private static final String USERNAME="root";
+	private static final String PASSSWORD="admin1234";
+	
+	
+	public static void main(String[] args) {
+		System.out.println("Welcome to JDBC course");
+		
+	    // Establishing a connection to DB.
+		try(Connection con=	DriverManager.getConnection(URL,USERNAME,PASSSWORD)) {
+			System.out.println("Connected to DB...!");
+			
+			//Execute a query
+			
+			// SELECT * FROM customertable;
+			try(Statement stmt= con.createStatement();
+			ResultSet result=stmt.executeQuery("SELECT * FROM customertable;")) {
+				
+				// Processing the result set
+				
+				while(result.next()) {
+					int id =result.getInt("id");
+					String name=result.getString("name");
+					String phoneNumber= result.getString("phone_number");
+					String emailAddress= result.getString("email_address");
+					
+					System.out.println();
+					System.out.println("-------------------------------------------");
+					System.out.println(
+							"Customer details  - id : "+id 
+							+" name : "+name +" phone number : " +phoneNumber
+							+"Email address  : " + emailAddress);
+				}
+				
+			
+				
+			} catch (SQLException e) {
+				System.out.println("Error while executing the SQL query : "+ e.getMessage());
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			System.out.println("Failed to connect with the DB : "+e.getMessage() );
+		}
+		
+		
+		
+		
+	}
+
+}

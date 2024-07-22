@@ -1,0 +1,81 @@
+package com.main;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+
+
+/**
+ * Hello world!
+ *
+ */
+public class App 
+{
+	private static final String URL="jdbc:mysql://127.0.0.1:3306/mydb";
+	private static final String USERNAME="root";
+	private static final String PASSWORD="admin1234";
+    public static void main( String[] args )
+    {
+       // Connect to DB 
+    	
+    	// "E:\images\cat.jpg"
+    	String path="E:\\images\\cat.jpg";
+    	
+    	try {
+    		
+    		Connection connection = DriverManager.getConnection(URL,USERNAME,PASSWORD);
+    		System.out.println("Connected to DB....");
+    		
+    		insertImage(connection, path);
+    		
+    		
+    		
+			connection.close();
+			System.out.println("Connection closed...");
+		} catch (SQLException e) {
+			System.out.println("failed to connect with DB.." + e.getMessage());
+		}
+    }
+    
+    // Method to insert the image into the table  animal_table
+    
+    private static void insertImage(Connection connection, String imagePath, String animalName) {
+    	
+    	String sql="INSERT INTO animal_table (image,time_stamp) VALUES(?,?,?)";
+    	
+    	try {
+    		PreparedStatement preparedStatement=connection.prepareStatement(sql);
+    		
+    		
+    		// convert image into binary form 
+    		
+    		FileInputStream inputStream = new FileInputStream(imagePath);
+    		
+    		//System.out.println(inputStream);
+    		
+    		preparedStatement.setBinaryStream(1, inputStream);
+    		preparedStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+    		preparedStatement.setString(3, animalName);
+
+    		int rowsAffected =preparedStatement.executeUpdate();
+    		
+    		System.out.println("row(s) affected  : " + rowsAffected);
+    		
+    	preparedStatement.close();
+    	
+		} catch (SQLException | FileNotFoundException e) {
+			
+		System.out.println("failed to insert image into table  :  " + e.getMessage() );
+		}
+    	
+    }
+    
+    
+    
+    
+    
+}

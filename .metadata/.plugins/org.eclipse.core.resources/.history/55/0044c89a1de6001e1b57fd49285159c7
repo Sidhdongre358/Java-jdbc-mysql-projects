@@ -1,0 +1,29 @@
+package testexception;
+
+import java.util.Scanner;
+
+public class TestException {
+
+	public static void main(String[] args) {
+
+      /*
+       * try
+       * catch 
+       * finally 
+       * throw
+       * throws
+       */
+		
+		Scanner scanner = new Scanner(System.in);
+		
+	int dividant =scanner.nextInt();
+	int divisor = scanner.nextInt();
+	
+	int result = dividant/divisor;
+	
+	System.out.println("The result is : "+  result);
+		
+
+	}
+
+}
